@@ -31,7 +31,8 @@ fun parse(input: CharSequence): List<Token> {
             }
             else -> {
                 when (currentChar) {
-                    '+' -> resultList.add(Plus())
+                    in operatorMap.keys -> resultList.add(operatorMap[currentChar]
+                            ?: error("$currentChar in operator map, but has no associated token"))
                     else -> println("Unrecognized character: $currentChar")
                 }
                 currentIndex++
@@ -41,6 +42,12 @@ fun parse(input: CharSequence): List<Token> {
 
     return resultList
 }
+
+// Non-special single character operators
+private val operatorMap = mapOf(
+        '+' to Plus(), '*' to Multiply(), '/' to Division(), '%' to Remainder(), '^' to Exponentiation(),
+        '&' to BitAnd(), '|' to BitOr()
+)
 
 // Reads while the condition is true and there are still more characters to read
 // Returns the consumed characters and the index which the condition returned false on on
