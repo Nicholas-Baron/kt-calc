@@ -61,12 +61,12 @@ private fun CharSequence.readWhile(start: Int, cond: (Char) -> Boolean): Pair<St
     return builder.toString() to index
 }
 
-private fun tokenFromString(symbol: String): Token? = when (symbol) {
+private fun tokenFromString(symbol: String) = when (symbol) {
     "sqrt" -> SquareRoot()
     else -> null
 }
 
-private fun tokenFromDigits(symbol: String): Token? =
+private fun tokenFromDigits(symbol: String) =
         if (symbol.contains('.')) {
             symbol.toFloatOrNull().letIfNotNull { Floating(it) }
         } else {
