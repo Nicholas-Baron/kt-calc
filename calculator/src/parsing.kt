@@ -45,6 +45,7 @@ fun parse(input: CharSequence): List<Token> {
                         }
                         resultList.add(token)
                     }
+                    '-' -> TODO("The minus could be either a unary minus '-5' or subtraction '10-5'")
                     else -> error("Unrecognized character: $currentChar")
                 }
                 currentIndex++
