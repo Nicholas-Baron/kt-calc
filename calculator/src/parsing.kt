@@ -63,7 +63,7 @@ private val operatorMap = mapOf(
 
 // Functions
 private val functionMap = mapOf(
-        "sqrt" to SquareRoot, "abs" to AbsVal, "sin" to Sine, "cos" to Cosine, "tan" to Tangent
+        "sqrt" to SquareRoot, "abs" to AbsVal, "sin" to Sine, "cos" to Cosine, "tan" to Tangent, "mod" to Modulo
 )
 
 // Reads while the condition is true and there are still more characters to read
