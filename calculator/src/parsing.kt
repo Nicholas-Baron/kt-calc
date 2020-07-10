@@ -33,6 +33,18 @@ fun parse(input: CharSequence): List<Token> {
                 when (currentChar) {
                     in operatorMap.keys -> resultList.add(operatorMap[currentChar]
                             ?: error("$currentChar in operator map, but has no associated token"))
+                    '<', '>' -> {
+                        currentIndex++
+                        val nextChar = input[currentIndex]
+                        if (nextChar != currentChar) {
+                            // TODO: Should this return an empty list on error?
+                            println("'<' and '>' are not valid single operators. Expected either '<<' or '>>'")
+                        } else when (nextChar) {
+                            '<' -> resultList.add(LeftShift)
+                            '>' -> resultList.add(RightShift)
+                            else -> error("$nextChar is not either '<' or '>'")
+                        }
+                    }
                     else -> println("Unrecognized character: $currentChar")
                 }
                 currentIndex++
