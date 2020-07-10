@@ -9,9 +9,6 @@ fun main() {
         }
 
         val tokens = parse(input)
-        tokens.forEach {
-            print("$it ")
-        }
-        println()
+        println(tokens.joinToString(separator = " "))
     }
 }
