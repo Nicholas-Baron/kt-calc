@@ -4,6 +4,9 @@ sealed class Token
 data class Floating(val value: Float) : Token()
 data class Integer(val value: Int) : Token()
 
+object LeftParenthesis : Token()
+object RightParenthesis : Token()
+
 // Binary operations
 class BitAnd : Token()
 class BitOr : Token()
