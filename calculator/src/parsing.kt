@@ -14,16 +14,16 @@ fun parse(input: CharSequence): List<Token> {
             currentChar.isLetter() -> {
                 val (symbol, index) = input.readWhile(start = currentIndex) { it.isLetter() }
 
-                val token = tokenFromString(symbol)
                 currentIndex = index
 
+                val token = functionMap[symbol];
                 if (token != null) resultList.add(token)
                 else println("Unrecognized token: $symbol")
             }
             currentChar.isDigit() -> {
                 val (symbol, index) = input.readWhile(start = currentIndex) { it.isDigit() || it == '.' }
 
-                val token = tokenFromDigits(symbol.toString())
+                val token = tokenFromDigits(symbol)
                 currentIndex = index
 
                 if (token != null) resultList.add(token)
@@ -49,6 +49,11 @@ private val operatorMap = mapOf(
         '&' to BitAnd(), '|' to BitOr()
 )
 
+// Functions
+private val functionMap = mapOf(
+        "sqrt" to SquareRoot(), "abs" to AbsVal(), "sin" to Sine(), "cos" to Cosine(), "tan" to Tangent()
+)
+
 // Reads while the condition is true and there are still more characters to read
 // Returns the consumed characters and the index which the condition returned false on on
 private fun CharSequence.readWhile(start: Int, cond: (Char) -> Boolean): Pair<String, Int> {
@@ -61,16 +66,9 @@ private fun CharSequence.readWhile(start: Int, cond: (Char) -> Boolean): Pair<St
     return builder.toString() to index
 }
 
-private fun tokenFromString(symbol: String) = when (symbol) {
-    "sqrt" -> SquareRoot()
-    else -> null
-}
-
 private fun tokenFromDigits(symbol: String) =
         if (symbol.contains('.')) {
-            symbol.toFloatOrNull().letIfNotNull { Floating(it) }
+            symbol.toFloatOrNull()?.let { Floating(it) }
         } else {
-            symbol.toIntOrNull().letIfNotNull { Integer(it) }
+            symbol.toIntOrNull()?.let { Integer(it) }
         }
-
-private fun <T, R> T?.letIfNotNull(block: (T) -> R): R? = if (this == null) null else block(this)
