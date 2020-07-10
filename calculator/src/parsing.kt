@@ -45,13 +45,13 @@ fun parse(input: CharSequence): List<Token> {
 
 // Non-special single character operators
 private val operatorMap = mapOf(
-        '+' to Plus(), '*' to Multiply(), '/' to Division(), '%' to Remainder(), '^' to Exponentiation(),
-        '&' to BitAnd(), '|' to BitOr(), '(' to LeftParenthesis, ')' to RightParenthesis
+        '+' to Plus, '*' to Multiply, '/' to Division, '%' to Remainder, '^' to Exponentiation,
+        '&' to BitAnd, '|' to BitOr, '(' to LeftParenthesis, ')' to RightParenthesis
 )
 
 // Functions
 private val functionMap = mapOf(
-        "sqrt" to SquareRoot(), "abs" to AbsVal(), "sin" to Sine(), "cos" to Cosine(), "tan" to Tangent()
+        "sqrt" to SquareRoot, "abs" to AbsVal, "sin" to Sine, "cos" to Cosine, "tan" to Tangent
 )
 
 // Reads while the condition is true and there are still more characters to read
