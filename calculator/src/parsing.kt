@@ -1,5 +1,4 @@
-// Returns the list of tokens and whether this sequence is the last sequence
-// (ie: the program should close after evaluating the input)
+// Returns the list of tokens
 fun parse(input: CharSequence): List<Token> {
     var currentIndex = 0
     val resultList = mutableListOf<Token>()
@@ -17,35 +16,36 @@ fun parse(input: CharSequence): List<Token> {
                 currentIndex = index
 
                 val token = functionMap[symbol];
-                if (token != null) resultList.add(token)
-                else println("Unrecognized token: $symbol")
+                resultList.add(token ?: error("Unrecognized token: $symbol"))
             }
             currentChar.isDigit() -> {
                 val (symbol, index) = input.readWhile(start = currentIndex) { it.isDigit() || it == '.' }
 
-                val token = tokenFromDigits(symbol)
                 currentIndex = index
 
-                if (token != null) resultList.add(token)
-                else println("Unrecognized number $symbol")
+                val token = tokenFromDigits(symbol)
+                resultList.add(token ?: error("Unrecognized number $symbol"))
             }
             else -> {
                 when (currentChar) {
-                    in operatorMap.keys -> resultList.add(operatorMap[currentChar]
-                            ?: error("$currentChar in operator map, but has no associated token"))
+                    in operatorMap.keys -> {
+                        val token = operatorMap[currentChar]
+                        resultList.add(token ?: error("$currentChar in operator map, but has no associated token"))
+                    }
                     '<', '>' -> {
                         currentIndex++
                         val nextChar = input[currentIndex]
-                        if (nextChar != currentChar) {
+                        val token = if (nextChar != currentChar) {
                             // TODO: Should this return an empty list on error?
-                            println("'<' and '>' are not valid single operators. Expected either '<<' or '>>'")
+                            error("'<' and '>' are not valid single operators. Expected either '<<' or '>>'")
                         } else when (nextChar) {
-                            '<' -> resultList.add(LeftShift)
-                            '>' -> resultList.add(RightShift)
+                            '<' -> LeftShift
+                            '>' -> RightShift
                             else -> error("$nextChar is not either '<' or '>'")
                         }
+                        resultList.add(token)
                     }
-                    else -> println("Unrecognized character: $currentChar")
+                    else -> error("Unrecognized character: $currentChar")
                 }
                 currentIndex++
             }
