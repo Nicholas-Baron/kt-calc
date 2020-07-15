@@ -3,6 +3,11 @@ fun parse(input: CharSequence): List<Token> {
     var currentIndex = 0
     val resultList = mutableListOf<Token>()
 
+    fun invalidParse(message: String): List<Token> {
+        println("Around character $currentIndex: $message")
+        return emptyList()
+    }
+
     nextChar@ while (currentIndex < input.length) {
         val currentChar = input[currentIndex]
         when {
@@ -16,42 +21,43 @@ fun parse(input: CharSequence): List<Token> {
                 currentIndex = index
 
                 val token = functionMap[symbol];
-                resultList.add(token ?: error("Unrecognized token: $symbol"))
+                resultList.add(token ?: return invalidParse("Unrecognized token: $symbol"))
             }
-            currentChar.isDigit() -> {
+            currentChar.isDigit() || currentChar == '.' -> {
                 val (symbol, index) = input.readWhile(start = currentIndex) { it.isDigit() || it == '.' }
 
                 currentIndex = index
 
-                if (symbol.endsWith('.')) {
-                    println("Please use ${symbol}0")
-                    return emptyList()
-                }
+                if (symbol.endsWith('.'))
+                    return invalidParse("Please use ${symbol}0")
+
+                if (symbol.startsWith('.'))
+                    return invalidParse("Please use 0${symbol}")
 
                 val token = tokenFromDigits(symbol)
-                resultList.add(token ?: error("Unrecognized number $symbol"))
+                resultList.add(token ?: return invalidParse("Unrecognized number $symbol"))
             }
             else -> {
                 when (currentChar) {
                     in operatorMap.keys -> {
                         val token = operatorMap[currentChar]
-                        resultList.add(token ?: error("$currentChar in operator map, but has no associated token"))
+                        resultList.add(token
+                                ?: return invalidParse("$currentChar in operator map, but has no associated token"))
                     }
                     '<', '>' -> {
                         currentIndex++
                         val nextChar = input[currentIndex]
                         val token = if (nextChar != currentChar) {
-                            // TODO: Should this return an empty list on error?
-                            error("'<' and '>' are not valid single operators. Expected either '<<' or '>>'")
+                            return invalidParse("'<' and '>' are not valid single operators. Expected either '<<' or '>>'")
                         } else when (nextChar) {
                             '<' -> LeftShift
                             '>' -> RightShift
-                            else -> error("$nextChar is not either '<' or '>'")
+                            else -> return invalidParse("$nextChar is not either '<' or '>'")
                         }
                         resultList.add(token)
                     }
                     '-' -> TODO("The minus could be either a unary minus '-5' or subtraction '10-5'")
-                    else -> error("Unrecognized character: $currentChar")
+                    else -> return invalidParse("Unrecognized character: $currentChar")
                 }
                 currentIndex++
             }
@@ -60,6 +66,7 @@ fun parse(input: CharSequence): List<Token> {
 
     return resultList
 }
+
 
 // Non-special single character operators
 private val operatorMap = mapOf(

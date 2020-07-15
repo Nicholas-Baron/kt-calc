@@ -9,6 +9,10 @@ fun main() {
         }
 
         val tokens = parse(input)
-        println(tokens.joinToString(separator = " "))
+
+        if (tokens.isEmpty())
+            println("Parsing failed")
+        else
+            println(tokens.joinToString(separator = " "))
     }
 }
