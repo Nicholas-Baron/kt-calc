@@ -23,6 +23,11 @@ fun parse(input: CharSequence): List<Token> {
 
                 currentIndex = index
 
+                if (symbol.endsWith('.')) {
+                    println("Please use ${symbol}0")
+                    return emptyList()
+                }
+
                 val token = tokenFromDigits(symbol)
                 resultList.add(token ?: error("Unrecognized number $symbol"))
             }
