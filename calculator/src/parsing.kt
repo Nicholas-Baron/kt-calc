@@ -12,7 +12,7 @@ fun parse(input: CharSequence): List<Token> {
         val currentChar = input[currentIndex]
         when {
             currentChar.isWhitespace() -> {
-                currentIndex++;
+                currentIndex++
                 continue@nextChar
             }
             currentChar.isLetter() -> {
@@ -20,7 +20,7 @@ fun parse(input: CharSequence): List<Token> {
 
                 currentIndex = index
 
-                val token = functionMap[symbol];
+                val token = functionMap[symbol]
                 resultList.add(token ?: return invalidParse("Unrecognized token: $symbol"))
             }
             currentChar.isDigit() || currentChar == '.' -> {
@@ -56,7 +56,24 @@ fun parse(input: CharSequence): List<Token> {
                         }
                         resultList.add(token)
                     }
-                    '-' -> TODO("The minus could be either a unary minus '-5' or subtraction '10-5'")
+                    '-' -> {
+                        // If the list is empty, this must be a negative
+                        if (resultList.isEmpty()) {
+                            var (symbol, index) = input.readWhile(start = currentIndex + 1) { it.isDigit() || it == '.' }
+
+                            if (symbol.startsWith('.')) return invalidParse("Please use -0$symbol")
+                            if (symbol.endsWith('.')) return invalidParse("Please use -${symbol}0")
+
+                            symbol = "-$symbol"
+                            currentIndex = index
+
+                            val token = tokenFromDigits(symbol)
+                            resultList.add(token ?: return invalidParse("Unrecognized number: $symbol"))
+                        } else if (resultList.last() is Integer || resultList.last() is Floating) {
+                            // If the last token is a value, this must be a subtraction
+                            resultList.add(Minus)
+                        } else TODO("Unimplemented case for '-': last is an operator or function")
+                    }
                     else -> return invalidParse("Unrecognized character: $currentChar")
                 }
                 currentIndex++
