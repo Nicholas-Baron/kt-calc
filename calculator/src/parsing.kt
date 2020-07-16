@@ -57,8 +57,9 @@ fun parse(input: CharSequence): List<Token> {
                         resultList.add(token)
                     }
                     '-' -> {
+                        // TODO: Simplify this logic when the token system improves
                         // If the list is empty, this must be a negative
-                        if (resultList.isEmpty()) {
+                        if (resultList.isEmpty() || (resultList.last() !is Floating && resultList.last() !is Integer)) {
                             var (symbol, index) = input.readWhile(start = currentIndex + 1) { it.isDigit() || it == '.' }
 
                             if (symbol.startsWith('.')) return invalidParse("Please use -0$symbol")
@@ -72,7 +73,7 @@ fun parse(input: CharSequence): List<Token> {
                         } else if (resultList.last() is Integer || resultList.last() is Floating) {
                             // If the last token is a value, this must be a subtraction
                             resultList.add(Minus)
-                        } else TODO("Unimplemented case for '-': last is an operator or function")
+                        } else TODO("Unimplemented case for '-'")
                     }
                     else -> return invalidParse("Unrecognized character: $currentChar")
                 }
