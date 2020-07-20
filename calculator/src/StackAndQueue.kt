@@ -5,6 +5,8 @@ fun <T> MutableList<T>.pop(): T = removeAt(count()-1)
 
 fun <T> MutableList<T>.peek(): T = last()
 
+fun <T> MutableList<T>.peekOrNull(): T? = if (isEmpty()) null else peek()
+
 fun <T> MutableList<T>.popOrNull(): T? = if(isEmpty()) null else pop()
 
 fun <T> MutableList<T>.enqueue (value: T)= this.add(value)
