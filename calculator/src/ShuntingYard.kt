@@ -1,37 +1,29 @@
+fun shunt(inputList: List<Token>): List<Token> {
+    val outputQueue = mutableListOf<Token>()
+    val operatorStack = mutableListOf<Token>()
 
-
-fun shunt (inputList: List<Token>) : List<Token>
-{
-    var outputQueue= mutableListOf<Token>()
-    var operatorStack= mutableListOf<Token>()
-
-    for(x in inputList)
-    {
-        if(x is Floating || x is Integer)
+    for (x in inputList) {
+        if (x is Floating || x is Integer)
             outputQueue.enqueue(x)
-        else if(x is Function)
+        else if (x is Function)
             operatorStack.push(x)
-        else if(x is BinaryOp) {
+        else if (x is BinaryOp) {
             while ((operatorStack.isNotEmpty()) &&
                     ((operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence()))
-                    && (operatorStack.peek() !is LeftParenthesis))
-            {
+                    && (operatorStack.peek() !is LeftParenthesis)) {
                 outputQueue.enqueue(operatorStack.pop())
             }
             operatorStack.push(x)
-        }
-        else if (x is LeftParenthesis)
+        } else if (x is LeftParenthesis)
             operatorStack.push(x)
         else if (x is RightParenthesis)
-            while(operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null)
-            {
+            while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
                 outputQueue.enqueue(operatorStack.pop())
-                if(operatorStack.peekOrNull() is LeftParenthesis)
+                if (operatorStack.peekOrNull() is LeftParenthesis)
                     operatorStack.popOrNull()
             }
     }
-    while(operatorStack.isNotEmpty())
-    {
+    while (operatorStack.isNotEmpty()) {
         outputQueue.enqueue(operatorStack.pop())
     }
     return outputQueue
