@@ -10,9 +10,14 @@ fun main() {
 
         val tokens = parse(input)
 
-        if (tokens.isEmpty())
+        if (tokens.isEmpty()) {
             println("Parsing failed")
-        else
-            println(tokens.joinToString(separator = " "))
+            continue
+        } 
+        println(tokens.joinToString(separator = " "))
+        val shunted = shunt(tokens)
+        while(shunted.isNotEmpty()) {
+            println(myList.dequeueOrNull())
+        }
     }
 }
