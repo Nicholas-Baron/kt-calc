@@ -1,10 +1,23 @@
-fun main()
-{
+fun main() {
+    println("Kotlin Calculator")
 
-    var myList = shunt(mutableListOf(Integer(1), Minus(), LeftParenthesis, Integer(4),Plus(),Integer(7),
-            Plus(), Integer(5), Multiply(), Integer(9), RightParenthesis)) as MutableList<Token>
-    while(myList.isNotEmpty())
-    {
-        println(myList.dequeueOrNull())
+    while (true) {
+        val input = readLine()
+        if (input == null) {
+            println("Error reading input. Try again")
+            continue
+        }
+
+        val tokens = parse(input)
+
+        if (tokens.isEmpty()) {
+            println("Parsing failed")
+            continue
+        } 
+        println(tokens.joinToString(separator = " "))
+        val shunted = shunt(tokens)
+        while(shunted.isNotEmpty()) {
+            println(myList.dequeueOrNull())
+        }
     }
 }

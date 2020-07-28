@@ -4,9 +4,10 @@ sealed class Token
 data class Floating(val value: Float) : Token()
 data class Integer(val value: Int) : Token()
 
-//singleton
 object LeftParenthesis : Token()
 object RightParenthesis : Token()
+
+// TODO: Change the classes to objects
 
 // Binary operations
 sealed class BinaryOp: Token()
