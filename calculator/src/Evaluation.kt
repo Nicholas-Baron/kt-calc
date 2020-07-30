@@ -1,7 +1,7 @@
 import java.util.*
 import kotlin.math.*
 
-fun eval(tokens : Array<Token>) : Token{
+fun eval(tokens: List<Token>): Token {
 
     val stack = ArrayDeque<Token>()
 
@@ -85,9 +85,9 @@ fun eval(tokens : Array<Token>) : Token{
                 is Function -> {
                     val x = stack.pop()
 
-                    when(x){
+                    when (x) {
                         is Integer -> {
-                            when(token){
+                            when (token) {
                                 is Sine -> stack.push(Floating(sin(x.value.toFloat())))
                                 is Cosine -> stack.push(Floating(cos(x.value.toFloat())))
                                 is Tangent -> stack.push(Floating(tan(x.value.toFloat())))
@@ -96,7 +96,7 @@ fun eval(tokens : Array<Token>) : Token{
                             }
                         }
                         is Floating -> {
-                            when(token) {
+                            when (token) {
                                 is Sine -> stack.push(Floating(sin(x.value)))
                                 is Cosine -> stack.push(Floating(cos(x.value)))
                                 is Tangent -> stack.push(Floating(tan(x.value)))
@@ -109,8 +109,7 @@ fun eval(tokens : Array<Token>) : Token{
             }
         }
         return stack.pop()
-    }
-    catch (e : Exception){
+    } catch (e: Exception) {
         println("Invalid expression")
         throw e
     }

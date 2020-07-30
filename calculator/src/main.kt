@@ -13,11 +13,12 @@ fun main() {
         if (tokens.isEmpty()) {
             println("Parsing failed")
             continue
-        } 
-        println(tokens.joinToString(separator = " "))
-        val shunted = shunt(tokens)
-        while(shunted.isNotEmpty()) {
-            println(myList.dequeueOrNull())
         }
+
+        val result = eval(shunt(tokens))
+
+        if (result is Integer) println(result.value)
+        else if (result is Floating) println(result.value)
+        else println("Unusual result returned")
     }
 }
