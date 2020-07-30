@@ -1,7 +1,7 @@
 import java.util.*
 import kotlin.math.*
 
-fun eval(tokens : Array<Token>) : Token{
+fun eval(tokens: List<Token>): Token {
 
     val stack = ArrayDeque<Token>()
 
