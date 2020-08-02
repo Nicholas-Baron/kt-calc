@@ -9,13 +9,17 @@ fun main() {
         }
 
         val tokens = parse(input)
-
         if (tokens.isEmpty()) {
             println("Parsing failed")
             continue
         }
+
         val shunted = shunt(tokens)
-        println("Debug shunted: ${shunted.joinToString()}")
+        if (shunted.isEmpty()) {
+            println("Shunting failed")
+            continue
+        }
+
         val result = eval(shunted)
 
         if (result is Integer) println(result.value)

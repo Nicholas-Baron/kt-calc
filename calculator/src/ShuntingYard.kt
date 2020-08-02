@@ -37,7 +37,10 @@ fun shunt(inputList: List<Token>): List<Token> {
         outputQueue.enqueue(operatorStack.pop())
     }
 
-    if (expectedOperands != 0) println("Expression may be unbalanced. Expected $expectedOperands more operands")
+    if (expectedOperands != 0) {
+        println("Expression may be unbalanced. Expected $expectedOperands more operands")
+        return emptyList()
+    }
 
     return outputQueue
 }
