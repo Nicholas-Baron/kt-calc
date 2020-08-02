@@ -3,6 +3,7 @@ sealed class Token
 // Classes which carry data
 data class Floating(val value: Float) : Token()
 data class Integer(val value: Int) : Token()
+object Sequence : Token()
 
 object LeftParenthesis : Token()
 object RightParenthesis : Token()

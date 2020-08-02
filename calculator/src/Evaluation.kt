@@ -1,9 +1,10 @@
 import java.util.*
 import kotlin.math.*
 
-fun eval(tokens: List<Token>): Token {
+fun eval(tokens: List<Token>): List<Token> {
 
     val stack = ArrayDeque<Token>()
+    val evaluated = mutableListOf<Token>()
 
     try {
         for (token in tokens) {
@@ -11,6 +12,13 @@ fun eval(tokens: List<Token>): Token {
             when (token) {
 
                 is Integer, is Floating -> stack.push(token) //push object to stack if its an operand
+
+                is Sequence -> {
+                    if(stack.isNotEmpty()) {
+                        val res = stack.pop()
+                        evaluated.add(res)
+                    }
+                }
 
                 //token is a binary operator
                 is BinaryOp -> {
@@ -108,7 +116,9 @@ fun eval(tokens: List<Token>): Token {
                 }
             }
         }
-        return stack.pop()
+        if(stack.isNotEmpty())
+            evaluated.add(stack.pop())
+        return evaluated
     } catch (e: Exception) {
         println("Invalid expression")
         throw e

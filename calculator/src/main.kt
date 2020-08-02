@@ -15,10 +15,20 @@ fun main() {
             continue
         }
 
-        val result = eval(shunt(tokens))
+        val results = eval(shunt(tokens))
 
-        if (result is Integer) println(result.value)
-        else if (result is Floating) println(result.value)
-        else println("Unusual result returned")
+        for(result in results){
+
+            if (result is Integer) println(result.value)
+            else if (result is Floating) println(result.value)
+            else println("Unusual result returned")
+
+        }
+
+//        val result = eval(shunt(tokens))
+//
+//        if (result is Integer) println(result.value)
+//        else if (result is Floating) println(result.value)
+//        else println("Unusual result returned")
     }
 }
