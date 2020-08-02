@@ -80,9 +80,7 @@ fun eval(tokens: List<Token>): List<Token> {
                     }
                 }
                 is Function -> {
-                    val x = stack.pop()
-
-                    when (x) {
+                    when (val x = stack.pop()) {
                         is Integer -> {
                             when (token) {
                                 is Sine -> stack.push(Floating(sin(x.value.toFloat())))
@@ -103,6 +101,7 @@ fun eval(tokens: List<Token>): List<Token> {
                         }
                     }
                 }
+                else -> throw Exception("Unexpected token $token in evaluation")
             }
         }
         if(stack.isNotEmpty())
