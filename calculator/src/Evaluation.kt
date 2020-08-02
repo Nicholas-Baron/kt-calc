@@ -15,34 +15,34 @@ fun eval(tokens: List<Token>): Token {
                 //token is a binary operator
                 is BinaryOp -> {
 
-                    val y = stack.pop()
-                    val x = stack.pop()
+                    val rhs = stack.pop()
+                    val lhs = stack.pop()
 
                     //If statements smart cast for different types of input
-                    if ((y is Integer) && (x is Integer)) {
+                    if ((rhs is Integer) && (lhs is Integer)) {
                         when (token) {
-                            is Plus -> stack.push(Integer(x.value + y.value))
-                            is Minus -> stack.push(Integer(x.value - y.value))
-                            is Multiply -> stack.push(Integer(x.value * y.value))
-                            is Division -> stack.push(Integer(x.value / y.value))
+                            is Plus -> stack.push(Integer(lhs.value + rhs.value))
+                            is Minus -> stack.push(Integer(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Integer(lhs.value * rhs.value))
+                            is Division -> stack.push(Integer(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value.toFloat()).pow(y.value.toFloat())
+                                val res = (lhs.value.toFloat()).pow(rhs.value.toFloat())
                                 stack.push(Integer(res.toInt()))
                             }
-                            is LeftShift -> stack.push(Integer(x.value shl y.value))
-                            is RightShift -> stack.push(Integer(x.value shr y.value))
-                            is BitAnd -> stack.push(Integer(x.value and y.value))
-                            is BitOr -> stack.push(Integer(x.value or y.value))
+                            is LeftShift -> stack.push(Integer(lhs.value shl rhs.value))
+                            is RightShift -> stack.push(Integer(lhs.value shr rhs.value))
+                            is BitAnd -> stack.push(Integer(lhs.value and rhs.value))
+                            is BitOr -> stack.push(Integer(lhs.value or rhs.value))
                         }
-                    } else if (x is Floating && y is Floating) {
+                    } else if (lhs is Floating && rhs is Floating) {
 
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value).pow(y.value)
+                                val res = (lhs.value).pow(rhs.value)
                                 stack.push(Integer(res.toInt()))
                             }
                             is LeftShift -> throw Exception()
@@ -50,14 +50,14 @@ fun eval(tokens: List<Token>): Token {
                             is BitAnd -> throw Exception()
                             is BitOr -> throw Exception()
                         }
-                    } else if (x is Integer && y is Floating) {
+                    } else if (lhs is Integer && rhs is Floating) {
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value.toFloat()).pow(y.value)
+                                val res = (lhs.value.toFloat()).pow(rhs.value)
                                 stack.push(Integer(res.toInt()))
                             }
                             is LeftShift -> throw Exception()
@@ -65,14 +65,14 @@ fun eval(tokens: List<Token>): Token {
                             is BitAnd -> throw Exception()
                             is BitOr -> throw Exception()
                         }
-                    } else if (x is Floating && y is Integer) {
+                    } else if (lhs is Floating && rhs is Integer) {
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value).pow(y.value.toFloat())
+                                val res = (lhs.value).pow(rhs.value.toFloat())
                                 stack.push(Integer(res.toInt()))
                             }
                             is LeftShift -> throw Exception()
