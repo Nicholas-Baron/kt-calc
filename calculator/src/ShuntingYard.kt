@@ -2,10 +2,18 @@ fun shunt(inputList: List<Token>): List<Token> {
     val outputQueue = mutableListOf<Token>()
     val operatorStack = mutableListOf<Token>()
 
+    var expectedOperands = 0
+
     for (x in inputList) {
         when (x) {
-            is Floating, is Integer -> outputQueue.enqueue(x)
-            is Function, is LeftParenthesis -> operatorStack.push(x)
+            is Floating, is Integer -> {
+                outputQueue.enqueue(x)
+                if (expectedOperands > 0) expectedOperands--
+            }
+            is Function, is LeftParenthesis -> {
+                operatorStack.push(x)
+                if (expectedOperands < 1) expectedOperands++
+            }
             is BinaryOp -> {
                 while (operatorStack.isNotEmpty() &&
                         (operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence())
@@ -13,6 +21,7 @@ fun shunt(inputList: List<Token>): List<Token> {
                     outputQueue.enqueue(operatorStack.pop())
                 }
                 operatorStack.push(x)
+                expectedOperands++
             }
             is RightParenthesis -> {
                 while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
@@ -27,6 +36,9 @@ fun shunt(inputList: List<Token>): List<Token> {
     while (operatorStack.isNotEmpty()) {
         outputQueue.enqueue(operatorStack.pop())
     }
+
+    if (expectedOperands != 0) println("Expression may be unbalanced. Expected $expectedOperands more operands")
+
     return outputQueue
 }
 
