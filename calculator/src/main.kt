@@ -14,8 +14,9 @@ fun main() {
             println("Parsing failed")
             continue
         }
-
-        val result = eval(shunt(tokens))
+        val shunted = shunt(tokens)
+        println("Debug shunted: ${shunted.joinToString()}")
+        val result = eval(shunted)
 
         if (result is Integer) println(result.value)
         else if (result is Floating) println(result.value)

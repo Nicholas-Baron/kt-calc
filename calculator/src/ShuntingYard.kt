@@ -3,26 +3,27 @@ fun shunt(inputList: List<Token>): List<Token> {
     val operatorStack = mutableListOf<Token>()
 
     for (x in inputList) {
-        if (x is Floating || x is Integer)
-            outputQueue.enqueue(x)
-        else if (x is Function)
-            operatorStack.push(x)
-        else if (x is BinaryOp) {
-            while ((operatorStack.isNotEmpty()) &&
-                    ((operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence()))
-                    && (operatorStack.peek() !is LeftParenthesis)) {
-                outputQueue.enqueue(operatorStack.pop())
+        when (x) {
+            is Floating, is Integer -> outputQueue.enqueue(x)
+            is Function, is LeftParenthesis -> operatorStack.push(x)
+            is BinaryOp -> {
+                while (operatorStack.isNotEmpty() &&
+                        (operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence())
+                        && operatorStack.peek() !is LeftParenthesis) {
+                    outputQueue.enqueue(operatorStack.pop())
+                }
+                operatorStack.push(x)
             }
-            operatorStack.push(x)
-        } else if (x is LeftParenthesis)
-            operatorStack.push(x)
-        else if (x is RightParenthesis)
-            while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
-                outputQueue.enqueue(operatorStack.pop())
-                if (operatorStack.peekOrNull() is LeftParenthesis)
-                    operatorStack.popOrNull()
+            is RightParenthesis -> {
+                while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
+                    outputQueue.enqueue(operatorStack.pop())
+                    if (operatorStack.peekOrNull() is LeftParenthesis)
+                        operatorStack.popOrNull()
+                }
             }
+        }
     }
+
     while (operatorStack.isNotEmpty()) {
         outputQueue.enqueue(operatorStack.pop())
     }
