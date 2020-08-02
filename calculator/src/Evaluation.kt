@@ -80,23 +80,33 @@ fun eval(tokens: List<Token>): List<Token> {
                     }
                 }
                 is Function -> {
+                    val functionMap = mapOf<Function, (Float) -> Floating>(
+                            Sine to { x -> Floating(sin(x)) },
+                            Cosine to { x -> Floating(cos(x)) },
+                            Tangent to { x -> Floating(tan(x)) },
+                            SquareRoot to { x -> Floating(sqrt(x)) }
+                    )
                     when (val x = stack.pop()) {
                         is Integer -> {
                             when (token) {
-                                is Sine -> stack.push(Floating(sin(x.value.toFloat())))
-                                is Cosine -> stack.push(Floating(cos(x.value.toFloat())))
-                                is Tangent -> stack.push(Floating(tan(x.value.toFloat())))
+                                in functionMap.keys -> {
+                                    val function = functionMap[token]
+                                            ?: throw Exception("Could not find $token in function map") // should never happen
+
+                                    stack.push(function(x.value.toFloat()))
+                                }
                                 is AbsVal -> stack.push(Integer(abs(x.value)))
-                                is SquareRoot -> stack.push(Floating(sqrt(x.value.toFloat())))
                             }
                         }
                         is Floating -> {
                             when (token) {
-                                is Sine -> stack.push(Floating(sin(x.value)))
-                                is Cosine -> stack.push(Floating(cos(x.value)))
-                                is Tangent -> stack.push(Floating(tan(x.value)))
+                                in functionMap.keys -> {
+                                    val function = functionMap[token]
+                                            ?: throw Exception("Could not find $token in function map") // should never happen
+
+                                    stack.push(function(x.value))
+                                }
                                 is AbsVal -> stack.push(Floating(abs(x.value)))
-                                is SquareRoot -> stack.push(Floating(sqrt(x.value)))
                             }
                         }
                     }
