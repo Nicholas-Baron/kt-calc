@@ -33,6 +33,7 @@ fun eval(tokens: List<Token>): Token {
                             is RightShift -> stack.push(Integer(lhs.value shr rhs.value))
                             is BitAnd -> stack.push(Integer(lhs.value and rhs.value))
                             is BitOr -> stack.push(Integer(lhs.value or rhs.value))
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
                     } else if (lhs is Floating && rhs is Floating) {
 
@@ -45,10 +46,7 @@ fun eval(tokens: List<Token>): Token {
                                 val res = (lhs.value).pow(rhs.value)
                                 stack.push(Integer(res.toInt()))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
                     } else if (lhs is Integer && rhs is Floating) {
                         when (token) {
@@ -60,10 +58,7 @@ fun eval(tokens: List<Token>): Token {
                                 val res = (lhs.value.toFloat()).pow(rhs.value)
                                 stack.push(Integer(res.toInt()))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
                     } else if (lhs is Floating && rhs is Integer) {
                         when (token) {
@@ -75,10 +70,7 @@ fun eval(tokens: List<Token>): Token {
                                 val res = (lhs.value).pow(rhs.value.toFloat())
                                 stack.push(Integer(res.toInt()))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
                     }
                 }
