@@ -95,7 +95,6 @@ fun eval(tokens: List<Token>): List<Token> {
                                 in functionMap.keys -> {
                                     val function = functionMap[token]
                                             ?: throw Exception("Could not find $token in function map") // should never happen
-
                                     stack.push(function(x.value.toFloat()))
                                 }
                                 is AbsVal -> stack.push(Integer(abs(x.value)))
@@ -134,4 +133,3 @@ private fun Integer.pow(exp: Integer) = when {
     exp.value == 0 -> Integer(1)
     else -> Integer(value = this.value.toFloat().pow(exp.value).toInt())
 }
-
