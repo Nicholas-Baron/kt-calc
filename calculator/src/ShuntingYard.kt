@@ -2,35 +2,57 @@ fun shunt(inputList: List<Token>): List<Token> {
     val outputQueue = mutableListOf<Token>()
     val operatorStack = mutableListOf<Token>()
 
+    var expectedOperands = 0
+
     for (x in inputList) {
-        if (x is Floating || x is Integer)
-            outputQueue.enqueue(x)
-        else if (x is Function)
-            operatorStack.push(x)
-        else if(x is Sequence) {
-            while (operatorStack.isNotEmpty())
-                outputQueue.enqueue(operatorStack.pop())
-            outputQueue.enqueue(x)
+        when (x) {
+            is Floating, is Integer -> {
+                outputQueue.enqueue(x)
+                if (expectedOperands > 0) expectedOperands--
+            }
+            is Function, is LeftParenthesis -> {
+                operatorStack.push(x)
+                if (expectedOperands < 1) expectedOperands++
+            }
+            is Sequence -> {
+                while (operatorStack.isNotEmpty())
+                    outputQueue.enqueue(operatorStack.pop())
+                outputQueue.enqueue(x)
+
+                if (expectedOperands != 0) {
+                    // TODO: Make error message more useful (add which expression)
+                    println("Expression may be unbalanced. Expected $expectedOperands more operands")
+                    return emptyList()
+                }
+            }
+            is BinaryOp -> {
+                while (operatorStack.isNotEmpty() &&
+                        (operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence())
+                        && operatorStack.peek() !is LeftParenthesis) {
+                    outputQueue.enqueue(operatorStack.pop())
+                }
+                operatorStack.push(x)
+                expectedOperands++
+            }
+            is RightParenthesis -> {
+                while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
+                    outputQueue.enqueue(operatorStack.pop())
+                    if (operatorStack.peekOrNull() is LeftParenthesis)
+                        operatorStack.popOrNull()
+                }
+            }
         }
-        else if (x is BinaryOp) {
-            while ((operatorStack.isNotEmpty()) &&
-                    ((operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence()))
-                    && (operatorStack.peek() !is LeftParenthesis)) {
-                outputQueue.enqueue(operatorStack.pop())
-            }
-            operatorStack.push(x)
-        } else if (x is LeftParenthesis)
-            operatorStack.push(x)
-        else if (x is RightParenthesis)
-            while (operatorStack.peekOrNull() !is LeftParenthesis && operatorStack.peekOrNull() != null) {
-                outputQueue.enqueue(operatorStack.pop())
-                if (operatorStack.peekOrNull() is LeftParenthesis)
-                    operatorStack.popOrNull()
-            }
     }
+
     while (operatorStack.isNotEmpty()) {
         outputQueue.enqueue(operatorStack.pop())
     }
+
+    if (expectedOperands != 0) {
+        println("Expression may be unbalanced. Expected $expectedOperands more operands")
+        return emptyList()
+    }
+
     return outputQueue
 }
 

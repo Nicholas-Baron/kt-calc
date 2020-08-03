@@ -9,15 +9,20 @@ fun main() {
         }
 
         val tokens = parse(input)
-
         if (tokens.isEmpty()) {
             println("Parsing failed")
             continue
         }
 
-        val results = eval(shunt(tokens))
+        val shunted = shunt(tokens)
+        if (shunted.isEmpty()) {
+            println("Shunting failed")
+            continue
+        }
 
-        for(result in results){
+        val results = eval(shunted)
+
+        for (result in results) {
 
             if (result is Integer) println(result.value)
             else if (result is Floating) println(result.value)
