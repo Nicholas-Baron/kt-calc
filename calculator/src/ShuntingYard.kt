@@ -14,6 +14,11 @@ fun shunt(inputList: List<Token>): List<Token> {
                 operatorStack.push(x)
                 if (expectedOperands < 1) expectedOperands++
             }
+            is Sequence -> {
+              while (operatorStack.isNotEmpty())
+                outputQueue.enqueue(operatorStack.pop())
+              outputQueue.enqueue(x)
+            }
             is BinaryOp -> {
                 while (operatorStack.isNotEmpty() &&
                         (operatorStack.peek().precedence() > x.precedence() || operatorStack.peek().precedence() == x.precedence())
