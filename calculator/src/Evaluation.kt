@@ -26,7 +26,7 @@ fun eval(tokens: List<Token>): List<Token> {
                     val lhs = stack.pop()
 
                     //If statements smart cast for different types of input
-                    if ((rhs is Integer) && (lhs is Integer)) {
+                    if (rhs is Integer && lhs is Integer) {
                         when (token) {
                             is Plus -> stack.push(Integer(lhs.value + rhs.value))
                             is Minus -> stack.push(Integer(lhs.value - rhs.value))
@@ -95,6 +95,7 @@ fun eval(tokens: List<Token>): List<Token> {
                                     stack.push(function(x.value.toFloat()))
                                 }
                                 is AbsVal -> stack.push(Integer(abs(x.value)))
+                                else -> throw Exception("Unexpected $token as function")
                             }
                         }
                         is Floating -> {
@@ -106,6 +107,7 @@ fun eval(tokens: List<Token>): List<Token> {
                                     stack.push(function(x.value))
                                 }
                                 is AbsVal -> stack.push(Floating(abs(x.value)))
+                                else -> throw Exception("Unexpected $token as function")
                             }
                         }
                     }
