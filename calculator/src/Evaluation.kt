@@ -13,7 +13,7 @@ fun eval(tokens: List<Token>): List<Token> {
 
                 is Integer, is Floating -> stack.push(token) //push object to stack if its an operand
 
-                is Sequence, Quit -> {
+                is Sequence, is Quit -> {
                     if (stack.isNotEmpty()) {
                         val res = stack.pop()
                         evaluated.add(res)
