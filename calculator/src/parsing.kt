@@ -89,7 +89,7 @@ fun parse(input: CharSequence): List<Token> {
 // Non-special single character operators
 private val operatorMap = mapOf(
         '+' to Plus, '*' to Multiply, '/' to Division, '%' to Remainder, '^' to Exponentiation,
-        '&' to BitAnd, '|' to BitOr, '(' to LeftParenthesis, ')' to RightParenthesis
+        '&' to BitAnd, '|' to BitOr, '(' to LeftParenthesis, ')' to RightParenthesis, ';' to Sequence
 )
 
 // Functions
