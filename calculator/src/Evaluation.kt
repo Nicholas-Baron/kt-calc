@@ -1,9 +1,8 @@
-import java.util.*
 import kotlin.math.*
 
 fun eval(tokens: List<Token>): List<Token> {
 
-    val stack = ArrayDeque<Token>()
+    val stack = mutableListOf<Token>()
     val evaluated = mutableListOf<Token>()
 
     try {
@@ -27,97 +26,95 @@ fun eval(tokens: List<Token>): List<Token> {
                 //token is a binary operator
                 is BinaryOp -> {
 
-                    val y = stack.pop()
-                    val x = stack.pop()
+                    val rhs = stack.pop()
+                    val lhs = stack.pop()
 
                     //If statements smart cast for different types of input
-                    if ((y is Integer) && (x is Integer)) {
+                    if (rhs is Integer && lhs is Integer) {
                         when (token) {
-                            is Plus -> stack.push(Integer(x.value + y.value))
-                            is Minus -> stack.push(Integer(x.value - y.value))
-                            is Multiply -> stack.push(Integer(x.value * y.value))
-                            is Division -> stack.push(Integer(x.value / y.value))
-                            is Exponentiation -> {
-                                val res = (x.value.toFloat()).pow(y.value.toFloat())
-                                stack.push(Integer(res.toInt()))
-                            }
-                            is LeftShift -> stack.push(Integer(x.value shl y.value))
-                            is RightShift -> stack.push(Integer(x.value shr y.value))
-                            is BitAnd -> stack.push(Integer(x.value and y.value))
-                            is BitOr -> stack.push(Integer(x.value or y.value))
+                            is Plus -> stack.push(Integer(lhs.value + rhs.value))
+                            is Minus -> stack.push(Integer(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Integer(lhs.value * rhs.value))
+                            is Division -> stack.push(Integer(lhs.value / rhs.value))
+                            is Exponentiation -> stack.push(lhs.pow(rhs))
+                            is LeftShift -> stack.push(Integer(lhs.value shl rhs.value))
+                            is RightShift -> stack.push(Integer(lhs.value shr rhs.value))
+                            is BitAnd -> stack.push(Integer(lhs.value and rhs.value))
+                            is BitOr -> stack.push(Integer(lhs.value or rhs.value))
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
-                    } else if (x is Floating && y is Floating) {
+                    } else if (lhs is Floating && rhs is Floating) {
 
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value).pow(y.value)
-                                stack.push(Integer(res.toInt()))
+                                val res = lhs.value.pow(rhs.value)
+                                stack.push(Floating(res))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
-                    } else if (x is Integer && y is Floating) {
+                    } else if (lhs is Integer && rhs is Floating) {
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value.toFloat()).pow(y.value)
-                                stack.push(Integer(res.toInt()))
+                                val res = lhs.value.toFloat().pow(rhs.value)
+                                stack.push(Floating(res))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
-                    } else if (x is Floating && y is Integer) {
+                    } else if (lhs is Floating && rhs is Integer) {
                         when (token) {
-                            is Plus -> stack.push(Floating(x.value + y.value))
-                            is Minus -> stack.push(Floating(x.value - y.value))
-                            is Multiply -> stack.push(Floating(x.value * y.value))
-                            is Division -> stack.push(Floating(x.value / y.value))
+                            is Plus -> stack.push(Floating(lhs.value + rhs.value))
+                            is Minus -> stack.push(Floating(lhs.value - rhs.value))
+                            is Multiply -> stack.push(Floating(lhs.value * rhs.value))
+                            is Division -> stack.push(Floating(lhs.value / rhs.value))
                             is Exponentiation -> {
-                                val res = (x.value).pow(y.value.toFloat())
-                                stack.push(Integer(res.toInt()))
+                                val res = lhs.value.pow(rhs.value)
+                                stack.push(Floating(res))
                             }
-                            is LeftShift -> throw Exception()
-                            is RightShift -> throw Exception()
-                            is BitAnd -> throw Exception()
-                            is BitOr -> throw Exception()
+                            else -> throw Exception("Unexpected operation $token on $lhs and $rhs")
                         }
                     }
                 }
                 is Function -> {
-                    val x = stack.pop()
-
-                    when (x) {
+                    val functionMap = mapOf<Function, (Float) -> Floating>(
+                            Sine to { x -> Floating(sin(x)) },
+                            Cosine to { x -> Floating(cos(x)) },
+                            Tangent to { x -> Floating(tan(x)) },
+                            SquareRoot to { x -> Floating(sqrt(x)) }
+                    )
+                    when (val x = stack.pop()) {
                         is Integer -> {
                             when (token) {
-                                is Sine -> stack.push(Floating(sin(x.value.toFloat())))
-                                is Cosine -> stack.push(Floating(cos(x.value.toFloat())))
-                                is Tangent -> stack.push(Floating(tan(x.value.toFloat())))
+                                in functionMap.keys -> {
+                                    val function = functionMap[token]
+                                            ?: throw Exception("Could not find $token in function map") // should never happen
+                                    stack.push(function(x.value.toFloat()))
+                                }
                                 is AbsVal -> stack.push(Integer(abs(x.value)))
-                                is SquareRoot -> stack.push(Floating(sqrt(x.value.toFloat())))
+                                else -> throw Exception("Unexpected $token as function")
                             }
                         }
                         is Floating -> {
                             when (token) {
-                                is Sine -> stack.push(Floating(sin(x.value)))
-                                is Cosine -> stack.push(Floating(cos(x.value)))
-                                is Tangent -> stack.push(Floating(tan(x.value)))
+                                in functionMap.keys -> {
+                                    val function = functionMap[token]
+                                            ?: throw Exception("Could not find $token in function map") // should never happen
+                                    stack.push(function(x.value))
+                                }
                                 is AbsVal -> stack.push(Floating(abs(x.value)))
-                                is SquareRoot -> stack.push(Floating(sqrt(x.value)))
+                                else -> throw Exception("Unexpected $token as function")
                             }
                         }
                     }
                 }
+                else -> throw Exception("Unexpected token $token in evaluation")
             }
         }
         if (stack.isNotEmpty())
@@ -128,4 +125,10 @@ fun eval(tokens: List<Token>): List<Token> {
         throw e
     }
 
+}
+
+private fun Integer.pow(exp: Integer) = when {
+    exp.value < 0 -> Floating(value = this.value.toFloat().pow(exp.value))
+    exp.value == 0 -> Integer(1)
+    else -> Integer(value = this.value.toFloat().pow(exp.value).toInt())
 }
