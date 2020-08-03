@@ -12,10 +12,14 @@ fun eval(tokens: List<Token>): List<Token> {
 
                 is Integer, is Floating -> stack.push(token) //push object to stack if its an operand
 
-                is Sequence -> {
+                is Sequence, is Quit -> {
                     if (stack.isNotEmpty()) {
                         val res = stack.pop()
                         evaluated.add(res)
+                    }
+                    if (token is Quit) {
+                        evaluated.add(token)
+                        return evaluated
                     }
                 }
 
@@ -130,3 +134,4 @@ private fun Integer.pow(exp: Integer) = when {
     exp.value == 0 -> Integer(1)
     else -> Integer(value = this.value.toFloat().pow(exp.value).toInt())
 }
+
