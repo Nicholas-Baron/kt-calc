@@ -1,9 +1,8 @@
-import java.util.*
 import kotlin.math.*
 
 fun eval(tokens: List<Token>): List<Token> {
 
-    val stack = ArrayDeque<Token>()
+    val stack = mutableListOf<Token>()
     val evaluated = mutableListOf<Token>()
 
     try {
@@ -14,7 +13,7 @@ fun eval(tokens: List<Token>): List<Token> {
                 is Integer, is Floating -> stack.push(token) //push object to stack if its an operand
 
                 is Sequence -> {
-                    if(stack.isNotEmpty()) {
+                    if (stack.isNotEmpty()) {
                         val res = stack.pop()
                         evaluated.add(res)
                     }
@@ -114,7 +113,7 @@ fun eval(tokens: List<Token>): List<Token> {
                 else -> throw Exception("Unexpected token $token in evaluation")
             }
         }
-        if(stack.isNotEmpty())
+        if (stack.isNotEmpty())
             evaluated.add(stack.pop())
         return evaluated
     } catch (e: Exception) {
