@@ -22,6 +22,8 @@ fun parse(input: CharSequence): List<Token> {
 
                 val token = functionMap[symbol]
                 resultList.add(token ?: return invalidParse("Unrecognized token: $symbol"))
+
+                if (token is Quit) return resultList
             }
             currentChar.isDigit() || currentChar == '.' -> {
                 val (symbol, index) = input.readWhile(start = currentIndex) { it.isDigit() || it == '.' }
@@ -94,8 +96,8 @@ private val operatorMap = mapOf(
 
 // Functions
 private val functionMap = mapOf(
-        "sqrt" to SquareRoot, "abs" to AbsVal, "sin" to Sine, "cos" to Cosine, "tan" to Tangent, "mod" to Modulo
-)
+        "sqrt" to SquareRoot, "abs" to AbsVal, "sin" to Sine, "cos" to Cosine, "tan" to Tangent, "mod" to Modulo,
+        "quit" to Quit)
 
 // Reads while the condition is true and there are still more characters to read
 // Returns the consumed characters and the index which the condition returned false on on
