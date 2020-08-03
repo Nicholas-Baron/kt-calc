@@ -22,7 +22,6 @@ fun eval(tokens: List<Token>): List<Token> {
                         evaluated.add(token)
                         return evaluated
                     }
-
                 }
 
                 //token is a binary operator
