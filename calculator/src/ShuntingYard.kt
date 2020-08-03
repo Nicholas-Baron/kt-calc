@@ -14,7 +14,7 @@ fun shunt(inputList: List<Token>): List<Token> {
                 operatorStack.push(x)
                 if (expectedOperands < 1) expectedOperands++
             }
-            is Sequence -> {
+            is Sequence, Quit -> {
                 while (operatorStack.isNotEmpty())
                     outputQueue.enqueue(operatorStack.pop())
                 outputQueue.enqueue(x)
