@@ -25,10 +25,5 @@ fun main() {
 
         }
 
-//        val result = eval(shunt(tokens))
-//
-//        if (result is Integer) println(result.value)
-//        else if (result is Floating) println(result.value)
-//        else println("Unusual result returned")
     }
 }
