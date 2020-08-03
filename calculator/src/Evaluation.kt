@@ -106,7 +106,6 @@ fun eval(tokens: List<Token>): List<Token> {
                                 in functionMap.keys -> {
                                     val function = functionMap[token]
                                             ?: throw Exception("Could not find $token in function map") // should never happen
-
                                     stack.push(function(x.value))
                                 }
                                 is AbsVal -> stack.push(Floating(abs(x.value)))
