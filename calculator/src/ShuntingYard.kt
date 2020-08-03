@@ -18,6 +18,12 @@ fun shunt(inputList: List<Token>): List<Token> {
                 while (operatorStack.isNotEmpty())
                     outputQueue.enqueue(operatorStack.pop())
                 outputQueue.enqueue(x)
+
+                if (expectedOperands != 0) {
+                    // TODO: Make error message more useful (add which expression)
+                    println("Expression may be unbalanced. Expected $expectedOperands more operands")
+                    return emptyList()
+                }
             }
             is BinaryOp -> {
                 while (operatorStack.isNotEmpty() &&
