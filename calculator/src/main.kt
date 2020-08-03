@@ -1,3 +1,5 @@
+import kotlin.system.exitProcess
+
 fun main() {
     println("Kotlin Calculator")
 
@@ -24,9 +26,12 @@ fun main() {
 
         for (result in results) {
 
-            if (result is Integer) println(result.value)
-            else if (result is Floating) println(result.value)
-            else println("Unusual result returned")
+            when (result) {
+                is Integer -> println(result.value)
+                is Floating -> println(result.value)
+                is Quit -> exitProcess(0)
+                else -> println("Unusual result returned")
+            }
 
         }
 
