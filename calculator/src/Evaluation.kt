@@ -13,10 +13,14 @@ fun eval(tokens: List<Token>): List<Token> {
 
                 is Integer, is Floating -> stack.push(token) //push object to stack if its an operand
 
-                is Sequence -> {
-                    if(stack.isNotEmpty()) {
+                is Sequence, is Quit -> {
+                    if (stack.isNotEmpty()) {
                         val res = stack.pop()
                         evaluated.add(res)
+                    }
+                    if (token is Quit) {
+                        evaluated.add(token)
+                        return evaluated
                     }
                 }
 
@@ -116,7 +120,7 @@ fun eval(tokens: List<Token>): List<Token> {
                 }
             }
         }
-        if(stack.isNotEmpty())
+        if (stack.isNotEmpty())
             evaluated.add(stack.pop())
         return evaluated
     } catch (e: Exception) {

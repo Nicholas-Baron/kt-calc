@@ -4,6 +4,7 @@ sealed class Token
 data class Floating(val value: Float) : Token()
 data class Integer(val value: Int) : Token()
 object Sequence : Token()
+object Quit : Token()
 
 object LeftParenthesis : Token()
 object RightParenthesis : Token()
